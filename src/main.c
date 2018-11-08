@@ -1,5 +1,5 @@
 /**
- * @file main.c
+sa:* @file main.c
  * @brief 
  * @author Tomislav Jankovic
  * @version 0.1a
@@ -11,10 +11,12 @@
 #include <GL/glu.h>
 #include <GL/gl.h>
 #include "draw.h"
-
+#include "window.h"
+#include "error_handler.h"
 
 #define ESC_KEY (27u)
 
+static const char *game_name = "v0rtX";
 
 static void gl_initalize(void);
 static void callback_initalize(void);
@@ -23,15 +25,20 @@ static void on_display(void);
 static void on_keyboard(unsigned char key, int x, int y);
 static void on_reshape(int, int);
 
+
 int main(int argc, char **argv){
- 
+  /* todo: implement basic inits that this code wont be here */
+  window_init(&my_window);
+  set_width(&my_window, 800);
+  set_height(&my_window, 600);
+  set_pos_x(&my_window, 100);
+  set_pos_y(&my_window, 100);
   /* init glut*/
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-  glutInitWindowSize(800, 600);
-  glutInitWindowPosition(100, 100);
-  glutCreateWindow(argv[0]);
-
+  glutInitWindowSize(my_window.width, my_window.height);
+  glutInitWindowPosition(my_window.pos_x, my_window.pos_y);
+  glutCreateWindow(game_name);
   /* register callback functions */
   callback_initalize();
   gl_initalize();
@@ -57,6 +64,7 @@ static void gl_initalize()
 }  
 /* TODO:
  * 1) implement other key functions, like starting the game, and controls
+ * 2) implement on_keyboard_up func 
  */
 static void on_keyboard(unsigned char key, int x, int y)
 {
