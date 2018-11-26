@@ -21,10 +21,12 @@ sa:* @file main.c
 
 static const char *game_name = "v0rtX";
 
+static float scale_factor = 0.0;
 static float jump_factor = 0.0;
 static int animation_ongoing = 0;
 static float translation_animation = 0.0f;
 static float spin_animation = 0.0f;
+static float lr_factor = 0.0f;
 static void gl_initalize(void);
 static void callback_initalize(void);
 
@@ -99,9 +101,11 @@ static void on_timer(int value)
   if(value != TIMER_ID)
     return;
 
-  spin_animation += 1.0f;
+  spin_animation += 10.0f;
   translation_animation += 0.1f;
-  jump_factor += 0.1;
+  //jump_factor += 0.1;
+  lr_factor += 0.0;
+  scale_factor += 10.0;
   glutPostRedisplay();
 
   if(animation_ongoing)
@@ -141,6 +145,13 @@ static void on_keyboard(unsigned char key, int x, int y)
     case 's':
       animation_ongoing = 0;
       break;
+    case 'a':
+      lr_factor += 0.1;
+      break;
+    case 'd':
+      lr_factor -= 0.1;
+      break;
+
   }
 }
 /* done */
@@ -157,7 +168,7 @@ static void on_display()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  gluLookAt(1.0f, 2.0f, -2.5f + translation_animation, 0.0f, 0.0f, 1.0f + translation_animation, 0.0f, 1.0f, 0.0f);
+  gluLookAt(0.0f + lr_factor, 0.0f, -1.5f + translation_animation, 0.0f + lr_factor, 0.0f, 1.0f + translation_animation, 0.0f, 1.0f, 0.0f);
 
   if(helper_flag){
     draw_coordinate_system();
@@ -167,21 +178,45 @@ static void on_display()
   /* implement function draw map */
 
   glPushMatrix();
-      glScalef(1.0f,0.1f,1.0f);
+      glScalef(1.0f,1.0,1.0f);
       glTranslatef(0.0,-0.1,0.0);
       glColor3f(1.0,0.0,1.0);
-
       glutWireCube(1.0);
       for(int i = 0; i < 100; i++){
         glTranslatef(0.0, 0.0, 1.01);
         glutWireCube(1.0);
       }
+
+      // for(int i = 0; i < 100; i++){
+      //   glTranslatef(0.0, 0.0, 1.01);
+      //   glutWireCube(1.0);
+      // }
+      // for(int i = 0; i < 100; i++){
+      //   glTranslatef(0.0, 0.0, 1.01);
+      //   glutWireCube(1.0);
+      // }
+      // for(int i = 0; i < 100; i++){
+      //   glTranslatef(0.0, 0.0, 1.01);
+      //   glutWireCube(1.0);
+      // }
+      // for(int i = 0; i < 100; i++){
+      //   glTranslatef(0.0, 0.0, 1.01);
+      //   glutWireCube(1.0);
+      // }
+      // for(int i = 0; i < 100; i++){
+      //   glTranslatef(0.0, 0.0, 1.01);
+      //   glutWireCube(1.0);
+      // }
+      // for(int i = 0; i < 100; i++){
+      //   glTranslatef(0.0, 0.0, 1.01);
+      //   glutWireCube(1.0);
+      // }
   glPopMatrix();
   /* this one is player logic */
   /* player can move only left and right the rest is on timer */
   glPushMatrix();
-    glTranslatef(0.0,0.2 + fabs(sin(jump_factor)),0.0 + translation_animation);
-    glRotatef(spin_animation, 1.0, 0.0, 0.0);
+    glTranslatef(0.0 + lr_factor,-0.2 + fabs(sin(jump_factor)),0.0 + translation_animation);
+    glRotatef(spin_animation, 1.0 + lr_factor, 0.0, 0.0 + lr_factor);
     glColor3f(1.0,1.0,0.0);
     glutWireSphere(0.2, 30, 30);
 
